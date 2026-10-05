@@ -1,0 +1,859 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>منظومة ES المحاسبية | ES System Enterprise v2.0</title>
+    <!-- Google Fonts Arabic (Tajawal & Cairo) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800;900&family=Tajawal:wght@300;400;500;700;800;900&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Lucide Icons (Vanilla) -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        gold: {
+                            100: '#FFF9E5',
+                            300: '#F3E192',
+                            400: '#E6CA53',
+                            500: '#D4AF37',
+                            600: '#AA8820',
+                            700: '#806311',
+                        },
+                        darkBg: '#070A11',
+                        darkCard: 'rgba(15, 23, 42, 0.65)',
+                        accentBlue: '#0284C7',
+                        accentTeal: '#0D9488',
+                    },
+                    fontFamily: {
+                        sans: ['Tajawal', 'Cairo', 'sans-serif'],
+                    },
+                    animation: {
+                        'pulse-glow': 'pulseGlow 3s infinite alternate',
+                        'float': 'float 6s ease-in-out infinite',
+                    },
+                    keyframes: {
+                        pulseGlow: {
+                            '0%': { boxShadow: '0 0 15px rgba(212, 175, 55, 0.2)' },
+                            '100%': { boxShadow: '0 0 35px rgba(212, 175, 55, 0.6)' },
+                        },
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0px)' },
+                            '50%': { transform: 'translateY(-12px)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            font-family: 'Tajawal', sans-serif;
+            background-color: #060911;
+            color: #F3F4F6;
+            overflow-x: hidden;
+        }
+
+        .glass-panel {
+            background: rgba(15, 23, 42, 0.7);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .glass-card {
+            background: linear-gradient(135deg, rgba(30, 41, 59, 0.6) 0%, rgba(15, 23, 42, 0.8) 100%);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(212, 175, 55, 0.15);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .glass-card:hover {
+            border-color: rgba(212, 175, 55, 0.5);
+            transform: translateY(-6px);
+            box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.7), 0 0 25px rgba(212, 175, 55, 0.2);
+        }
+
+        .gold-gradient-text {
+            background: linear-gradient(135deg, #FFF5C0 0%, #D4AF37 50%, #9A7B1C 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .blue-gradient-text {
+            background: linear-gradient(135deg, #38BDF8 0%, #818CF8 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #0B0F19;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #1E293B;
+            border-radius: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: #D4AF37;
+        }
+
+        /* Mockup Window Styling */
+        .window-frame {
+            background: #1e293b;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            overflow: hidden;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.8);
+        }
+    </style>
+</head>
+<body class="custom-scrollbar bg-[#060911] text-gray-100 selection:bg-gold-500 selection:text-black">
+
+    <!-- Background Animated Blobs -->
+    <div class="fixed inset-0 overflow-hidden pointer-events-none z-0">
+        <div class="absolute -top-40 -right-40 w-96 h-96 bg-gold-500/10 rounded-full blur-3xl animate-pulse"></div>
+        <div class="absolute top-1/3 -left-40 w-96 h-96 bg-sky-500/10 rounded-full blur-3xl animate-pulse" style="animation-delay: 2s;"></div>
+        <div class="absolute bottom-10 right-1/4 w-96 h-96 bg-indigo-500/10 rounded-full blur-3xl animate-pulse" style="animation-delay: 4s;"></div>
+    </div>
+
+    <!-- Navigation Header -->
+    <header class="sticky top-0 z-50 glass-panel border-b border-white/10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-20">
+                
+                <!-- Logo -->
+                <div class="flex items-center gap-3">
+                    <div class="w-12 h-12 rounded-xl bg-gradient-to-tr from-sky-600 via-blue-600 to-gold-500 p-0.5 shadow-lg shadow-sky-500/20">
+                        <div class="w-full h-full bg-slate-950 rounded-[10px] flex items-center justify-center font-black text-2xl text-gold-400">
+                            ES
+                        </div>
+                    </div>
+                    <div>
+                        <span class="text-xl font-bold tracking-wider gold-gradient-text block leading-none">ES System</span>
+                        <span class="text-xs text-sky-400 font-semibold tracking-widest uppercase">Enterprise v2.0</span>
+                    </div>
+                </div>
+
+                <!-- Desktop Nav -->
+                <nav class="hidden md:flex items-center space-x-8 space-x-reverse text-sm font-medium text-gray-300">
+                    <a href="#hero" class="hover:text-gold-400 transition-colors">الرئيسية</a>
+                    <a href="#features" class="hover:text-gold-400 transition-colors">المميزات</a>
+                    <a href="#showcase" class="hover:text-gold-400 transition-colors">لقطات الشاشة</a>
+                    <a href="#stats" class="hover:text-gold-400 transition-colors">عن المنظومة</a>
+                    <a href="#developer" class="hover:text-gold-400 transition-colors">المطور</a>
+                </nav>
+
+                <!-- Action Button -->
+                <div class="flex items-center gap-4">
+                    <a href="#contact" class="hidden sm:inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-gold-500 to-amber-600 text-slate-950 font-bold text-sm shadow-lg shadow-gold-500/20 hover:brightness-110 transition-all hover:scale-105 active:scale-95">
+                        <i class="fa-solid fa-cart-shopping"></i>
+                        <span>اطلب البرنامج الآن</span>
+                    </a>
+                    <button id="mobileMenuBtn" class="md:hidden text-gray-300 hover:text-white p-2">
+                        <i class="fa-solid fa-bars text-2xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Menu Dropdown -->
+        <div id="mobileMenu" class="hidden md:hidden glass-panel border-b border-white/10 px-4 pt-2 pb-6 space-y-3">
+            <a href="#hero" class="block py-2 text-gray-300 hover:text-gold-400">الرئيسية</a>
+            <a href="#features" class="block py-2 text-gray-300 hover:text-gold-400">المميزات</a>
+            <a href="#showcase" class="block py-2 text-gray-300 hover:text-gold-400">لقطات الشاشة</a>
+            <a href="#stats" class="block py-2 text-gray-300 hover:text-gold-400">عن المنظومة</a>
+            <a href="#developer" class="block py-2 text-gray-300 hover:text-gold-400">المطور والترخيص</a>
+            <a href="#contact" class="block py-3 text-center rounded-xl bg-gold-500 text-slate-950 font-bold">اطلب البرنامج الآن</a>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section id="hero" class="relative z-10 pt-12 pb-20 lg:pt-20 lg:pb-32 overflow-hidden">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+                
+                <!-- Hero Content -->
+                <div class="lg:col-span-7 space-y-8 text-center lg:text-right">
+                    
+                    <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full glass-panel border border-gold-500/30 text-gold-400 text-xs sm:text-sm font-semibold shadow-inner">
+                        <span class="flex h-2 w-2 rounded-full bg-emerald-400 animate-ping"></span>
+                        <i class="fa-solid fa-crown text-gold-400"></i>
+                        <span>الجيل الجديد من الأنظمة المحاسبية المتكاملة</span>
+                    </div>
+
+                    <h1 class="text-4xl sm:text-5xl lg:text-6xl font-black leading-tight">
+                        إدارة محاسبية احترافية <br>
+                        <span class="gold-gradient-text">بأعلى معايير الدقة والأمان</span>
+                    </h1>
+
+                    <p class="text-gray-300 text-base sm:text-lg lg:text-xl font-normal leading-relaxed max-w-2xl mx-auto lg:mx-0">
+                        منظومة <strong class="text-white font-bold">ES System Enterprise v2.0</strong> صُممت لتمكنك من إدارة المبيعات، المشتريات، الحسابات، الديون، والمخزون بأسلوب تقني متطور، مرن، مع أرشفة شاملة وسجل نشاطات محمي.
+                    </p>
+
+                    <!-- Features Pills -->
+                    <div class="flex flex-wrap justify-center lg:justify-start gap-3 pt-2 text-xs sm:text-sm text-gray-300">
+                        <span class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-900/80 border border-slate-700">
+                            <i class="fa-solid fa-shield-halved text-emerald-400"></i> تشفير وحماية عالية
+                        </span>
+                        <span class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-900/80 border border-slate-700">
+                            <i class="fa-solid fa-bolt text-amber-400"></i> سرعة معالجة فائقة
+                        </span>
+                        <span class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-900/80 border border-slate-700">
+                            <i class="fa-solid fa-file-excel text-green-500"></i> تصدير سريع للـ Excel
+                        </span>
+                    </div>
+
+                    <!-- Call To Action Buttons -->
+                    <div class="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 pt-4">
+                        <a href="#contact" class="w-full sm:w-auto px-8 py-4 rounded-xl bg-gradient-to-r from-gold-500 via-amber-500 to-amber-600 text-slate-950 font-extrabold text-base shadow-xl shadow-gold-500/25 hover:brightness-110 transition-all flex items-center justify-center gap-3 transform hover:-translate-y-1">
+                            <i class="fa-solid fa-paper-plane text-lg"></i>
+                            <span>احصل على نسختك الآن</span>
+                        </a>
+                        <a href="#showcase" class="w-full sm:w-auto px-8 py-4 rounded-xl glass-panel hover:bg-slate-800/80 text-white font-bold text-base border border-slate-700 hover:border-gold-500/50 transition-all flex items-center justify-center gap-3">
+                            <i class="fa-solid fa-circle-play text-sky-400"></i>
+                            <span>استكشف شاشات البرنامج</span>
+                        </a>
+                    </div>
+
+                    <!-- Quick Support Badge -->
+                    <div class="pt-2 flex items-center justify-center lg:justify-start gap-4 text-xs text-gray-400">
+                        <div class="flex items-center gap-1.5">
+                            <i class="fa-solid fa-headset text-gold-400"></i>
+                            <span>دعم فني مباشر</span>
+                        </div>
+                        <span>•</span>
+                        <div class="flex items-center gap-1.5">
+                            <i class="fa-solid fa-user-gear text-sky-400"></i>
+                            <span>إعداد وتخصيص كامل</span>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Hero Graphic Showcase -->
+                <div class="lg:col-span-5 relative">
+                    <div class="relative mx-auto max-w-md lg:max-w-none">
+                        
+                        <!-- Glowing backdrop -->
+                        <div class="absolute -inset-1 bg-gradient-to-r from-gold-500 to-sky-500 rounded-3xl blur-2xl opacity-30 animate-pulse-glow"></div>
+
+                        <!-- Main Screen Preview Card -->
+                        <div class="relative window-frame bg-slate-900 border border-slate-700/80 p-2 shadow-2xl">
+                            <!-- Window Titlebar Mock -->
+                            <div class="flex items-center justify-between px-3 py-2 bg-slate-950 rounded-t-lg border-b border-slate-800 mb-2">
+                                <div class="flex items-center space-x-2 space-x-reverse">
+                                    <span class="w-3 h-3 rounded-full bg-red-500 inline-block"></span>
+                                    <span class="w-3 h-3 rounded-full bg-yellow-500 inline-block"></span>
+                                    <span class="w-3 h-3 rounded-full bg-green-500 inline-block"></span>
+                                </div>
+                                <span class="text-xs text-gray-400 font-mono">ES System Enterprise - الواجهة الرئيسية</span>
+                            </div>
+
+                            <!-- Screen Container -->
+                            <div class="relative group overflow-hidden rounded-lg">
+                                <img id="heroImage" src="C:\Users\hadi\Pictures\ES system\Screenshot (130).png" alt="ES System Enterprise Main Screen" class="w-full h-auto object-cover rounded-lg border border-slate-800 transition-transform duration-700 group-hover:scale-105">
+                                <div class="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent flex items-end p-4">
+                                    <div class="text-right">
+                                        <span class="text-xs font-bold text-gold-400 bg-slate-900/90 px-2.5 py-1 rounded-md border border-gold-500/30">لوحة التحكم الرئيسية</span>
+                                        <p class="text-xs text-gray-300 mt-1">وصول سريع لجميع الأقسام: مبيعات، مشتريات، مخزون وديون</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Floating Stat Badge 1 -->
+                        <div class="absolute -bottom-6 -right-6 glass-card p-4 rounded-2xl hidden sm:flex items-center gap-3 shadow-xl z-20 border border-gold-500/30">
+                            <div class="w-10 h-10 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center font-bold text-lg">
+                                <i class="fa-solid fa-chart-line"></i>
+                            </div>
+                            <div>
+                                <p class="text-xs text-gray-400">تقارير ودقة البيانات</p>
+                                <p class="text-sm font-extrabold text-white">100% مطابقة فورية</p>
+                            </div>
+                        </div>
+
+                        <!-- Floating Stat Badge 2 -->
+                        <div class="absolute -top-6 -left-6 glass-card p-4 rounded-2xl hidden sm:flex items-center gap-3 shadow-xl z-20 border border-sky-500/30">
+                            <div class="w-10 h-10 rounded-xl bg-sky-500/20 text-sky-400 flex items-center justify-center font-bold text-lg">
+                                <i class="fa-solid fa-user-shield"></i>
+                            </div>
+                            <div>
+                                <p class="text-xs text-gray-400">نظام الصلاحيات</p>
+                                <p class="text-sm font-extrabold text-white">متعدد المستخدمين</p>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Key Stats Section -->
+    <section id="stats" class="py-12 relative z-10 border-y border-white/5 bg-slate-950/50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8">
+                
+                <div class="glass-card p-6 rounded-2xl text-center space-y-2">
+                    <div class="text-gold-400 text-3xl lg:text-4xl font-black font-mono">v2.0</div>
+                    <div class="text-gray-300 text-sm font-medium">أحدث إصدار المطور</div>
+                </div>
+
+                <div class="glass-card p-6 rounded-2xl text-center space-y-2">
+                    <div class="text-sky-400 text-3xl lg:text-4xl font-black font-mono">100%</div>
+                    <div class="text-gray-300 text-sm font-medium">أمان وتشفير البيانات</div>
+                </div>
+
+                <div class="glass-card p-6 rounded-2xl text-center space-y-2">
+                    <div class="text-emerald-400 text-3xl lg:text-4xl font-black font-mono">8+</div>
+                    <div class="text-gray-300 text-sm font-medium">أنظمة شاشات مدمجة</div>
+                </div>
+
+                <div class="glass-card p-6 rounded-2xl text-center space-y-2">
+                    <div class="text-amber-400 text-3xl lg:text-4xl font-black font-mono">&infin;</div>
+                    <div class="text-gray-300 text-sm font-medium">عدد الفواتير والعمليات</div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Grid Section -->
+    <section id="features" class="py-20 relative z-10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            
+            <div class="text-center max-w-3xl mx-auto mb-16 space-y-4">
+                <h2 class="text-xs font-bold text-gold-400 tracking-widest uppercase bg-gold-500/10 inline-block px-4 py-1.5 rounded-full border border-gold-500/20">مميزات النظام الرئيسية</h2>
+                <p class="text-3xl sm:text-4xl font-black text-white">كل ما تحتاجه لإدارة نشاطك التجاري في مكان واحد</p>
+                <p class="text-gray-400 text-base">تم بناء النظام ليكون سهلاً وسريعاً مع تقديم تغطية شمولية لكافة التعاملات المالية والمستودعية.</p>
+            </div>
+
+            <!-- Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                
+                <!-- Feature 1 -->
+                <div class="glass-card p-6 rounded-2xl space-y-4 relative overflow-hidden group">
+                    <div class="w-12 h-12 rounded-xl bg-lime-500/20 border border-lime-500/30 text-lime-400 flex items-center justify-center text-2xl group-hover:scale-110 transition-transform">
+                        <i class="fa-solid fa-cart-shopping"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-white">إدارة المبيعات والفواتير</h3>
+                    <p class="text-gray-400 text-sm leading-relaxed">
+                        واجهة مبيعات فائقة السرعة مع دعم الباركوود، اختيار نوع الدفع (نقدي / آجل)، إضافة الخصومات وطباعة الفواتير بضغطة زر.
+                    </p>
+                </div>
+
+                <!-- Feature 2 -->
+                <div class="glass-card p-6 rounded-2xl space-y-4 relative overflow-hidden group">
+                    <div class="w-12 h-12 rounded-xl bg-rose-500/20 border border-rose-500/30 text-rose-400 flex items-center justify-center text-2xl group-hover:scale-110 transition-transform">
+                        <i class="fa-solid fa-truck-ramp-box"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-white">إدارة المشتريات</h3>
+                    <p class="text-gray-400 text-sm leading-relaxed">
+                        سجل كامل لفواتير الشراء، حساب التكلفة وسعر البيع المحدث، إدارة مستحقات الموردين وتتبع الشحنات بدقة.
+                    </p>
+                </div>
+
+                <!-- Feature 3 -->
+                <div class="glass-card p-6 rounded-2xl space-y-4 relative overflow-hidden group">
+                    <div class="w-12 h-12 rounded-xl bg-slate-500/20 border border-slate-500/30 text-slate-300 flex items-center justify-center text-2xl group-hover:scale-110 transition-transform">
+                        <i class="fa-solid fa-boxes-stacked"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-white">إدارة المخزون المنتجات</h3>
+                    <p class="text-gray-400 text-sm leading-relaxed">
+                        متابعة الكميات، أسعار التكلفة والجملة والمفرق، حصر إجمالي القطع مع إضافة وتعديل وحذف المنتجات بسهولة.
+                    </p>
+                </div>
+
+                <!-- Feature 4 -->
+                <div class="glass-card p-6 rounded-2xl space-y-4 relative overflow-hidden group">
+                    <div class="w-12 h-12 rounded-xl bg-amber-500/20 border border-amber-500/30 text-amber-400 flex items-center justify-center text-2xl group-hover:scale-110 transition-transform">
+                        <i class="fa-solid fa-chart-pie"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-white">السجلات والإحصاءات</h3>
+                    <p class="text-gray-400 text-sm leading-relaxed">
+                        تقارير مالية شاملة، حساب رأس المال، صافي الأرباح، مجموع المبيعات والمشتريات وتصدير السجلات مباشرة إلى Excel.
+                    </p>
+                </div>
+
+                <!-- Feature 5 -->
+                <div class="glass-card p-6 rounded-2xl space-y-4 relative overflow-hidden group">
+                    <div class="w-12 h-12 rounded-xl bg-teal-500/20 border border-teal-500/30 text-teal-400 flex items-center justify-center text-2xl group-hover:scale-110 transition-transform">
+                        <i class="fa-solid fa-users-gear"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-white">إدارة الموّردين</h3>
+                    <p class="text-gray-400 text-sm leading-relaxed">
+                        حذف وإضافة الحسابات والديون لكل موّرد على حدى بكل سهولة.
+                    </p>
+                </div>
+
+                <!-- Feature 6 -->
+                <div class="glass-card p-6 rounded-2xl space-y-4 relative overflow-hidden group">
+                    <div class="w-12 h-12 rounded-xl bg-teal-600/20 border border-teal-500/30 text-cyan-400 flex items-center justify-center text-2xl group-hover:scale-110 transition-transform">
+                        <i class="fa-solid fa-hand-holding-dollar"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-white">إدارة الزبائن والديون</h3>
+                    <p class="text-gray-400 text-sm leading-relaxed">
+                        تسجيل الزبائن الجدد، كشوفات الديون الحالية، تسجيل دفعات التسديد وإضافة الديون وملاحظات التسديد.
+                    </p>
+                </div>
+
+                <!-- Feature 7 -->
+                <div class="glass-card p-6 rounded-2xl space-y-4 relative overflow-hidden group">
+                    <div class="w-12 h-12 rounded-xl bg-emerald-500/20 border border-emerald-500/30 text-emerald-400 flex items-center justify-center text-2xl group-hover:scale-110 transition-transform">
+                        <i class="fa-solid fa-receipt"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-white">سجل نشاطات الحسابات</h3>
+                    <p class="text-gray-400 text-sm leading-relaxed">
+                        تتبع كلي لعمليات النظام (دخول، تنظيف سجلات، مسح)، تسجيل التاريخ والوقت واسم المستخدم لضمان أعلى شفافية.
+                    </p>
+                </div>
+
+                <!-- Feature 8 -->
+                <div class="glass-card p-6 rounded-2xl space-y-4 relative overflow-hidden group">
+                    <div class="w-12 h-12 rounded-xl bg-purple-500/20 border border-purple-500/30 text-purple-400 flex items-center justify-center text-2xl group-hover:scale-110 transition-transform">
+                        <i class="fa-solid fa-print"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-white">إعدادات الطباعة الشاملة</h3>
+                    <p class="text-gray-400 text-sm leading-relaxed">
+                        تخصيص كامل لإعدادات الطابعة والهيدر والفوتر الخاص بالفواتير وتنسيق خيارات الطباعة السريعة.
+                    </p>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Interactive Screen Showcase -->
+    <section id="showcase" class="py-20 bg-slate-950/80 border-y border-white/5 relative z-10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            
+            <div class="text-center max-w-3xl mx-auto mb-12 space-y-4">
+                <h2 class="text-xs font-bold text-sky-400 tracking-widest uppercase bg-sky-500/10 inline-block px-4 py-1.5 rounded-full border border-sky-500/20">معرض واجهات المنظومة</h2>
+                <p class="text-3xl sm:text-4xl font-black text-white">استعرض شاشات البرنامج الحقيقية</p>
+                <p class="text-gray-400 text-sm sm:text-base">اضغط على أي قسم لمعاينة الواجهة الرسمية للبرنامج بالتفصيل</p>
+            </div>
+
+            <!-- Filter Tabs Navigation -->
+            <div class="flex items-center justify-start lg:justify-center gap-2 overflow-x-auto pb-4 mb-8 custom-scrollbar">
+                <button onclick="switchTab(0)" class="tab-btn px-5 py-2.5 rounded-xl text-sm font-bold whitespace-nowrap transition-all bg-gold-500 text-slate-950 shadow-lg">1. الواجهة الرئيسية</button>
+                <button onclick="switchTab(1)" class="tab-btn px-5 py-2.5 rounded-xl text-sm font-bold whitespace-nowrap transition-all bg-slate-800 text-gray-300 hover:bg-slate-700">2. واجهة المبيعات</button>
+                <button onclick="switchTab(2)" class="tab-btn px-5 py-2.5 rounded-xl text-sm font-bold whitespace-nowrap transition-all bg-slate-800 text-gray-300 hover:bg-slate-700">3. المشتريات</button>
+                <button onclick="switchTab(3)" class="tab-btn px-5 py-2.5 rounded-xl text-sm font-bold whitespace-nowrap transition-all bg-slate-800 text-gray-300 hover:bg-slate-700">4. إدارة المخزون</button>
+                <button onclick="switchTab(4)" class="tab-btn px-5 py-2.5 rounded-xl text-sm font-bold whitespace-nowrap transition-all bg-slate-800 text-gray-300 hover:bg-slate-700">5. السجلات والإحصاءات</button>
+                <button onclick="switchTab(5)" class="tab-btn px-5 py-2.5 rounded-xl text-sm font-bold whitespace-nowrap transition-all bg-slate-800 text-gray-300 hover:bg-slate-700">6. إدارة الصلاحيات</button>
+                <button onclick="switchTab(6)" class="tab-btn px-5 py-2.5 rounded-xl text-sm font-bold whitespace-nowrap transition-all bg-slate-800 text-gray-300 hover:bg-slate-700">7. سجل النشاطات</button>
+                <button onclick="switchTab(7)" class="tab-btn px-5 py-2.5 rounded-xl text-sm font-bold whitespace-nowrap transition-all bg-slate-800 text-gray-300 hover:bg-slate-700">8. الديون والزبائن</button>
+                <button onclick="switchTab(8)" class="tab-btn px-5 py-2.5 rounded-xl text-sm font-bold whitespace-nowrap transition-all bg-slate-800 text-gray-300 hover:bg-slate-700">9. إدارة الموّردين</button>
+            </div>
+
+            <!-- Active Screen Display Area -->
+            <div class="window-frame bg-slate-900 border border-slate-700 p-2 sm:p-4 max-w-5xl mx-auto shadow-2xl relative">
+                
+                <!-- Titlebar -->
+                <div class="flex items-center justify-between pb-3 border-b border-slate-800 mb-4 px-2">
+                    <div class="flex items-center gap-2">
+                        <span class="w-3 h-3 rounded-full bg-red-500"></span>
+                        <span class="w-3 h-3 rounded-full bg-yellow-500"></span>
+                        <span class="w-3 h-3 rounded-full bg-green-500"></span>
+                        <span id="screenTitle" class="text-xs sm:text-sm font-mono text-gold-400 font-bold mr-2">ES System - الواجهة الرئيسية</span>
+                    </div>
+                    <button onclick="openModal()" class="text-xs text-sky-400 hover:text-sky-300 flex items-center gap-1 bg-slate-800 px-3 py-1 rounded-lg border border-slate-700">
+                        <i class="fa-solid fa-expand"></i>
+                        <span>تكبير الشاشة</span>
+                    </button>
+                </div>
+
+                <!-- Image Frame -->
+                <div class="relative group rounded-xl overflow-hidden bg-slate-950 min-h-[300px] flex items-center justify-center">
+                    <img id="screenImage" src="C:\Users\hadi\Pictures\ES system\Screenshot (130).png" alt="ES System Screen Preview" class="w-full h-auto max-h-[600px] object-contain transition-all duration-300">
+                </div>
+
+                <!-- Description Bar -->
+                <div class="mt-4 p-4 rounded-xl bg-slate-950/80 border border-slate-800 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+                    <div>
+                        <h4 id="screenDescTitle" class="text-base font-bold text-white">الواجهة الرئيسية للنظام</h4>
+                        <p id="screenDescText" class="text-xs sm:text-sm text-gray-400 mt-0.5">لوحة تحكم شمولية ملوّنة تتيح الوصول الفوري لأقسام المبيعات، المشتريات، المخزون، سجل النشاطات والمزيد.</p>
+                    </div>
+                    <div class="flex items-center gap-2 self-end md:self-auto">
+                        <button onclick="prevTab()" class="p-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-white"><i class="fa-solid fa-chevron-right"></i></button>
+                        <button onclick="nextTab()" class="p-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-white"><i class="fa-solid fa-chevron-left"></i></button>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Developer & License Rights Section -->
+    <section id="developer" class="py-20 relative z-10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="glass-panel rounded-3xl p-8 sm:p-12 border border-gold-500/30 relative overflow-hidden">
+                
+                <!-- Decorative Glow Background -->
+                <div class="absolute -bottom-20 -left-20 w-80 h-80 bg-gold-500/10 rounded-full blur-3xl pointer-events-none"></div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+                    
+                    <!-- Developer Avatar / Icon -->
+                    <div class="lg:col-span-4 flex flex-col items-center text-center space-y-4">
+                        <div class="relative">
+                            <div class="w-32 h-32 rounded-3xl bg-gradient-to-tr from-gold-500 via-amber-600 to-sky-600 p-1 shadow-2xl">
+                                <div class="w-full h-full bg-slate-950 rounded-[22px] flex items-center justify-center">
+                                    <i class="fa-solid fa-user-gear text-5xl gold-gradient-text"></i>
+                                </div>
+                            </div>
+                            <span class="absolute -bottom-2 -right-2 bg-emerald-500 text-slate-950 text-xs font-black px-3 py-1 rounded-full border border-slate-900 shadow-md">
+                                مستقل
+                            </span>
+                        </div>
+                        <div>
+                            <h3 class="text-2xl font-black text-white">Eng. Hadi Aleed</h3>
+                            <p class="text-sm text-gold-400 font-semibold mt-0.5">المهندس هادي العيد</p>
+                            <p class="text-xs text-gray-400 mt-1">مطور برمجيات وأنظمة محاسبية وتطبيقات enterprise</p>
+                        </div>
+                    </div>
+
+                    <!-- Developer Info Content -->
+                    <div class="lg:col-span-8 space-y-6">
+                        
+                        <div class="space-y-2">
+                            <span class="text-xs font-bold text-sky-400 tracking-wider uppercase bg-sky-500/10 px-3 py-1 rounded-md border border-sky-500/20">معلومات النظام و حقوق المطوّر</span>
+                            <h3 class="text-3xl font-black text-white">منظومة ES System Enterprise v2.0</h3>
+                        </div>
+
+                        <p class="text-gray-300 text-sm sm:text-base leading-relaxed">
+                            جميع الحقوق الفكرية والبرمجية محفوظة. تم بناء وتشفير المنظومة بأعلى معايير الأمان والاستقرار لضمان أداء سلس ودائم للأنشطة التجارية والمؤسسات.
+                        </p>
+
+                        <!-- Information Badges Grid -->
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
+                            
+                            <div class="p-4 rounded-2xl bg-slate-900/80 border border-slate-800 flex items-center gap-4">
+                                <div class="w-10 h-10 rounded-xl bg-gold-500/20 text-gold-400 flex items-center justify-center text-lg">
+                                    <i class="fa-solid fa-code-version"></i>
+                                </div>
+                                <div>
+                                    <span class="text-xs text-gray-400 block">رقم الإصدار الحالي</span>
+                                    <span class="text-sm font-bold text-white font-mono">Version 2.0</span>
+                                </div>
+                            </div>
+
+                            <div class="p-4 rounded-2xl bg-slate-900/80 border border-slate-800 flex items-center gap-4">
+                                <div class="w-10 h-10 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-lg">
+                                    <i class="fa-solid fa-phone"></i>
+                                </div>
+                                <div>
+                                    <span class="text-xs text-gray-400 block">أرسل رسالة واتساب</span>
+                                    <a href="tel:+96178846017" dir="ltr" class="text-sm font-bold text-white hover:text-gold-400 font-mono transition-colors">+961 78 846 017</a>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <!-- Direct WhatsApp CTA -->
+                        <div class="pt-2">
+                            <a href="https://wa.me/96178846017?text=مرحباً%20مهندس%20هادي،%20أود%20الاستفسار%20عن%20برنامج%20ES%20System%20Enterprise%20v2.0" target="_blank" class="inline-flex items-center gap-3 px-6 py-3.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-sm shadow-lg shadow-emerald-600/30 transition-all">
+                                <i class="fa-brands fa-whatsapp text-xl"></i>
+                                <span>تواصل مباشر عبر الواتساب للمطور</span>
+                            </a>
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Order & Contact Section -->
+    <section id="contact" class="py-20 bg-slate-950/60 relative z-10 border-t border-white/5">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+                
+                <!-- Left Info Text -->
+                <div class="lg:col-span-5 space-y-6">
+                    <div class="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-gold-500/10 text-gold-400 text-xs font-bold border border-gold-500/20">
+                        <i class="fa-solid fa-bolt"></i>
+                        <span>طلب فوري ودعم فني متكامل</span>
+                    </div>
+
+                    <h2 class="text-3xl sm:text-4xl font-black text-white leading-tight">
+                        جاهز لتطوير أداء عملك المحاسبي؟
+                    </h2>
+
+                    <p class="text-gray-300 text-sm sm:text-base leading-relaxed">
+                        قم بتعبئة طلب الحصول على المنظومة أو احجز واستشر المهندس المطور مباشرة لتسليم النسخة وتجهيزها  لمؤسستك.
+                    </p>
+
+                    <div class="space-y-4 pt-2">
+                        <div class="flex items-center gap-4 text-gray-300 text-sm">
+                            <div class="w-8 h-8 rounded-lg bg-slate-800 text-gold-400 flex items-center justify-center">
+                                <i class="fa-solid fa-check"></i>
+                            </div>
+                            <span>تركيب وتثبيت سريع على أجهزتك</span>
+                        </div>
+                        <div class="flex items-center gap-4 text-gray-300 text-sm">
+                            <div class="w-8 h-8 rounded-lg bg-slate-800 text-gold-400 flex items-center justify-center">
+                                <i class="fa-solid fa-check"></i>
+                            </div>
+                            <span>تدريب كامل على استخدام شاشات البرنامج</span>
+                        </div>
+                        <div class="flex items-center gap-4 text-gray-300 text-sm">
+                            <div class="w-8 h-8 rounded-lg bg-slate-800 text-gold-400 flex items-center justify-center">
+                                <i class="fa-solid fa-check"></i>
+                            </div>
+                            <span>تحديثات مستمرة وضمان أمان البيانات</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Order Form -->
+                <div class="lg:col-span-7">
+                    <div class="glass-card p-6 sm:p-10 rounded-3xl border border-slate-700/80 shadow-2xl">
+                        <h3 class="text-2xl font-bold text-white mb-6 flex items-center gap-3">
+                            <i class="fa-solid fa-file-pen text-gold-400"></i>
+                            <span>استمارة طلب النسخة</span>
+                        </h3>
+
+                        <form id="orderForm" onsubmit="handleOrderSubmit(event)" class="space-y-4">
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-xs font-semibold text-gray-300 mb-2">اسمك الكريم / اسم الشركة</label>
+                                    <input type="text" required placeholder="مثال: شركة النور أو أحمد العلي" class="w-full px-4 py-3 rounded-xl bg-slate-900 border border-slate-700 text-white focus:outline-none focus:border-gold-500 transition-colors text-sm">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-semibold text-gray-300 mb-2">رقم الهاتف / الواتساب</label>
+                                    <input type="tel" required placeholder="+961 ..." class="w-full px-4 py-3 rounded-xl bg-slate-900 border border-slate-700 text-white focus:outline-none focus:border-gold-500 transition-colors text-sm text-right" dir="ltr">
+                                </div>
+                            </div>
+
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-xs font-semibold text-gray-300 mb-2">نوع النشاط التجاري</label>
+                                    <select class="w-full px-4 py-3 rounded-xl bg-slate-900 border border-slate-700 text-white focus:outline-none focus:border-gold-500 transition-colors text-sm">
+                                        <option value="retail">تجارة تجزئة / محل</option>
+                                        <option value="wholesale">تجارة جملة / مستودعات</option>
+                                        <option value="services">شركة خدمات</option>
+                                        <option value="other">نشاط آخر</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-semibold text-gray-300 mb-2">عدد أجهزة الكاشير المطلوبة</label>
+                                    <input type="number" min="1" value="1" class="w-full px-4 py-3 rounded-xl bg-slate-900 border border-slate-700 text-white focus:outline-none focus:border-gold-500 transition-colors text-sm">
+                                </div>
+                            </div>
+
+                            <div>
+                                <label class="block text-xs font-semibold text-gray-300 mb-2">تفاصيل إضافية أو ملاحظات</label>
+                                <textarea rows="3" placeholder="اكتب أي استفسار أو طلب خاص بالطباعة والنظام..." class="w-full px-4 py-3 rounded-xl bg-slate-900 border border-slate-700 text-white focus:outline-none focus:border-gold-500 transition-colors text-sm"></textarea>
+                            </div>
+
+                            <button type="submit" class="w-full py-4 rounded-xl bg-gradient-to-r from-gold-500 to-amber-600 text-slate-950 font-black text-base shadow-lg shadow-gold-500/20 hover:brightness-110 transition-all flex items-center justify-center gap-2">
+                                <i class="fa-solid fa-paper-plane"></i>
+                                <span>إرسال الطلب أوتوماتيكياً عبر واتساب</span>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-slate-950 border-t border-slate-800/80 py-12 relative z-10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row items-center justify-between gap-6">
+                
+                <!-- Logo & Copyright -->
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-lg bg-gold-500 text-slate-950 flex items-center justify-center font-black text-xl">
+                        ES
+                    </div>
+                    <div>
+                        <p class="text-sm font-bold text-white">منظومة ES System Enterprise v2.0</p>
+                        <p class="text-xs text-gray-400">جميع الحقوق الفكرية والبرمجية محفوظة &copy; 2026 Eng. Hadi Aleed</p>
+                    </div>
+                </div>
+
+                <!-- Footer Links -->
+                <div class="flex items-center gap-6 text-xs text-gray-400">
+                    <a href="#hero" class="hover:text-gold-400">الرئيسية</a>
+                    <a href="#features" class="hover:text-gold-400">المميزات</a>
+                    <a href="#showcase" class="hover:text-gold-400">معرض الواجهات</a>
+                    <a href="#developer" class="hover:text-gold-400">المطور</a>
+                </div>
+
+                <!-- Contact Phone -->
+                <div class="text-left" dir="ltr">
+                    <span class="text-xs text-gray-400 block">Direct Contact:</span>
+                    <a href="tel:+96178846017" class="text-sm font-bold text-gold-400 font-mono">+961 78 846 017</a>
+                </div>
+
+            </div>
+        </div>
+    </footer>
+
+    <!-- Image Modal Viewport -->
+    <div id="imageModal" class="fixed inset-0 z-50 bg-black/90 backdrop-blur-md hidden flex items-center justify-center p-4">
+        <button onclick="closeModal()" class="absolute top-6 right-6 text-white hover:text-gold-400 text-3xl font-bold">
+            <i class="fa-solid fa-xmark"></i>
+        </button>
+        <div class="max-w-6xl w-full max-h-[90vh] overflow-hidden rounded-2xl border border-slate-700 bg-slate-900 p-2">
+            <img id="modalImg" src="" alt="Full View Screen" class="w-full h-auto max-h-[85vh] object-contain mx-auto rounded-lg">
+        </div>
+    </div>
+
+    <!-- Interactive Logic Script -->
+    <script>
+        // Data structure containing information for all user screenshot interfaces
+        const screensData = [
+            {
+                title: "الواجهة الرئيسية - Dashboard",
+                descTitle: "لوحة التحكم الرئيسية للمنظومة",
+                descText: "تتميز بتصميم ملون مريح للعين يوفر أزراراً سريعة للوصول إلى كافة الأقسام: المبيعات، المشتريات، المخزون، سجل النشاطات، الحسابات، الديون والإحصاءات.",
+                img: "C:\\Users\\hadi\\Pictures\\ES system\\Screenshot (130).png"
+            },
+            {
+                title: "واجهة المبيعات وكتالوج الفواتير",
+                descTitle: "شاشة تحرير فواتير المبيعات",
+                descText: "شاشة سريعة تتيح إدخال الباركوود، اختيار نوع الدفع (نقدي/آجل)، اختيار الزبون، إضافة خصومات وطباعة سريعة مع التأكيد الحظي.",
+                img: "C:\\Users\\hadi\\Pictures\\ES system\\Screenshot (131).png"
+            },
+            {
+                title: "إدارة المشتريات",
+                descTitle: "شاشة المشتريات وإدخال البضائع",
+                descText: "تسجيل فواتير الشراء من الموردين، تحديث سعر التكلفة وسعر البيع تلقائياً وحسب سعر الصرف، وإدارة الخصومات والكميات.",
+                img: "C:\\Users\\hadi\\Pictures\\ES system\\Screenshot (132).png"
+            },
+            {
+                title: "إدارة المخزون والمستودع",
+                descTitle: "شاشة التحكم بالمنتجات والمخزون",
+                descText: "جدول كلي لحصر الباركوود، اسم المنتج، سعر التكلفة، سعر البيع والجملة والكمية المتوفرة مع إحصاء إجمالي القطع في المستودع.",
+                img: "C:\\Users\\hadi\\Pictures\\ES system\\Screenshot (133).png"
+            },
+            {
+                title: "السجلات والإحصاءات المالية",
+                descTitle: "لوحة الإحصاءات والأرباح والتقارير",
+                descText: "حساب دقيق لمجموع المبيعات والمشتريات، صافي الأرباح، رأس المال القائم، إجمالي قيمة المبيعات والجملة، وتصدير كامل البيانات للـ Excel.",
+                img: "C:\\Users\\hadi\\Pictures\\ES system\\Screenshot (134).png"
+            },
+            {
+                title: "إدارة المستخدمين والصلاحيات",
+                descTitle: "التحكم في أدوار الحسابات",
+                descText: "إضافة مستخدمين كاشير ومدراء، تعيين كلمات المرور وتحديد الصلاحيات الخاصة لكل مستخدم لضمان حماية النظام.",
+                img: "C:\\Users\\hadi\\Pictures\\ES system\\Screenshot (135).png"
+            },
+            {
+                title: "سجل نشاطات الحسابات والعمليات",
+                descTitle: "نظام الأرشفة والمراقبة الدقيقة",
+                descText: "يسجل كافة العمليات التي تجري في النظام موثقة باسم المستخدم، الصلاحية، نوع الحركة (دخول، تنظيف سجلات)، والتاريخ والوقت.",
+                img: "C:\\Users\\hadi\\Pictures\\ES system\\Screenshot (136).png"
+            },
+            {
+                title: "إدارة الديون والزبائن",
+                descTitle: "كشف وتسديد ديون الزبائن",
+                descText: "جدول لمتابعة الديون الحالية للزبائن، تسجيل الدفعات، إضافة ديون جديدة، وأرشفتها بدقة حسب رقم الهاتف وتفاصيل التسديد.",
+                img: "C:\\Users\\hadi\\Pictures\\ES system\\Screenshot (137).png"
+            },
+            {
+                title: "إدارة الموّردين",
+                descTitle: "شاشة الموّردين وإدارتهم",
+                descText: "يمكن إدارة حسابات الموّردين و ديونهم بسهولة",
+                img: "C:\\Users\\hadi\\Pictures\\ES system\\Screenshot (138).png"
+            }
+        ];
+
+        let currentTabIndex = 0;
+
+        function updateScreenDisplay(index) {
+            currentTabIndex = index;
+            const data = screensData[index];
+            
+            // Update Text Elements
+            document.getElementById('screenTitle').innerText = data.title;
+            document.getElementById('screenDescTitle').innerText = data.descTitle;
+            document.getElementById('screenDescText').innerText = data.descText;
+            document.getElementById('screenImage').src = data.img;
+
+            // Update Tab Active Styling
+            const tabs = document.querySelectorAll('.tab-btn');
+            tabs.forEach((tab, i) => {
+                if (i === index) {
+                    tab.className = "tab-btn px-5 py-2.5 rounded-xl text-sm font-bold whitespace-nowrap transition-all bg-gold-500 text-slate-950 shadow-lg scale-105";
+                } else {
+                    tab.className = "tab-btn px-5 py-2.5 rounded-xl text-sm font-bold whitespace-nowrap transition-all bg-slate-800 text-gray-300 hover:bg-slate-700";
+                }
+            });
+        }
+
+        function switchTab(index) {
+            updateScreenDisplay(index);
+        }
+
+        function nextTab() {
+            let next = (currentTabIndex + 1) % screensData.length;
+            updateScreenDisplay(next);
+        }
+
+        function prevTab() {
+            let prev = (currentTabIndex - 1 + screensData.length) % screensData.length;
+            updateScreenDisplay(prev);
+        }
+
+        // Modal Controls
+        function openModal() {
+            const currentImgSrc = document.getElementById('screenImage').src;
+            document.getElementById('modalImg').src = currentImgSrc;
+            document.getElementById('imageModal').classList.remove('hidden');
+        }
+
+        function closeModal() {
+            document.getElementById('imageModal').classList.add('hidden');
+        }
+
+        // Form Submission to WhatsApp
+        function handleOrderSubmit(event) {
+            event.preventDefault();
+            const inputs = event.target.querySelectorAll('input, select, textarea');
+            const name = inputs[0].value;
+            const phone = inputs[1].value;
+            const business = inputs[2].value;
+            const posCount = inputs[3].value;
+            const notes = inputs[4].value;
+
+            const msg = `مرحباً مهندس هادي، أود طلب برنامج ES System Enterprise v2.0:%0A- الاسم: ${encodeURIComponent(name)}%0A- الهاتف: ${encodeURIComponent(phone)}%0A- نوع النشاط: ${encodeURIComponent(business)}%0A- عدد الكاشيرات: ${encodeURIComponent(posCount)}%0A- ملاحظات: ${encodeURIComponent(notes)}`;
+            
+            window.open(`https://wa.me/96178846017?text=${msg}`, '_blank');
+        }
+
+        // Mobile Menu Toggle
+        document.getElementById('mobileMenuBtn').addEventListener('click', function() {
+            const menu = document.getElementById('mobileMenu');
+            menu.classList.toggle('hidden');
+        });
+
+        // Initialize Lucide icons
+        lucide.createIcons();
+    </script>
+</body>
+</html>
